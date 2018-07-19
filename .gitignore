@@ -2,6 +2,18 @@
 .Rhistory
 .Rapp.history
 
+#Data directory
+data/
+
+#Output directory
+output/
+
+#Figure Directory
+figs/
+
+#PDF files
+/*.pdf
+
 # Session Data files
 .RData
 
@@ -34,3 +46,4 @@ vignettes/*.pdf
 
 # Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
 rsconnect/
+.Rproj.user
