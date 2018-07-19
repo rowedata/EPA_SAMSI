@@ -1,0 +1,117 @@
+
+
+
+To differentiate two different region divisions in this study, nine climatically consistent regions within the contiguous United States will be referred to nine NOAA regions hereafter, which include Northwest (NW), Northern Rockies and Plains (NR), West (W), Southwest (SW), Upper Midwest (UM), South (S), Ohio Valley (OV), Southeast (SE), and Northeast (NE), while nine square regions, each covers one NOAA region, constituted by grid cells, on which Downscaler model is calculated, will be referred to as DS regions. Each NOAA region includes several spatially adjacent states and they do not intersect with each other, while on the other hand, pair of adjacent DS regions, in order to completely cover their corresponding NOAA regions, share an area of intersection. Hence, for each AQS monitoring station which locates in the intersection of two DS regions,the grid cells which it belongs to, will simultaneously have two different mean DS estimates and standard error estimates.  DS model is applied on regional scale (DS regions) producing 9 surfaces of estimate $PM_{2.5}$. It was seen that the DS estimated surfaces of $PM_{2.5}$  are not smoothly connected. Especially the DS estimates from the region NW and NR are so different on the boundary that it leaves an issue of creating smooth surface.
+
+To tackle this issue, we use the grid cells that lie inside the overlap areas of the region (2-4 overlaps per region). we use model averaging  where the probability density fucntion of a grid cell in the overlap   is a weighted average of density functions,  which are the predictive distributions of the grid cell from regional DS. We set the weight proportional to the distance of the grid cells to the boundary of the overlap, because the larger the distance is, the further the point is toward the inner area and less influenced by adjacent region.
+
+The parameter $\phi$ is also introduced to adjust the effect of distance on wieghts. More specifically, we have the following weight for the density function from region $i$ with point $s$ :
+$\[  w_{i}(s)=\exp(-\phi ds_i) \]$  where $ds_i $ is the  distance of point s to outer boundary of region $i$. This implies that the larger the $\phi$ is, the bigger influence the distance has on the wieght. In extream case when $\phi$ is zero , the weight are simply evenly distrubuted among the densities, and if $\phi=\infty$  the probability density function simply becomes the closest density function and the weight has no effect on averaging.
+
+Data strategy overview:
+1.    Find the grid cells that lie inside the overlap areas of the region (2- 4 overlaps per region)
+2.    Find downscaler prediction of mean and variance for each grid cell in the overlap.
+3.    For AQS stations inside the overlap, find the grid cell it’s located in.
+4.    For each AQS station inside the overlap combine the following info that will be used in the model: AQS reading, DS mean 1, DS mean 2, DS Standard Deviation 1, DS Standard Deviation 2, distance to the boundary of zone 1, distance to the boundary of zone 2.
+
+
+
+
+
+For AQS stations inside the overlap,we find the grid cell it’s located in and we calculate "d" as the "distance to the bounday of "zone 1" to the "zone n" based on our number of zones in the overlapping area of each region. Then, we will Find downscaler prediction of mean ("mu") and standard deviation ("sd") for each grid cell in the overlap.
+for instance, as we have two zones of NW and NR, we want to optimize the maximum likelihood function of each zone regarding normal distribution and then, to consider the probability density function regarding the average modeling of 2 (in general n) normal distribution of 2 zones in a region.
+At the end, based upon the MLE function, we can figure out "phi" as a parameter to see that the overlap intersection part goes to which zone!
+
+
+========================================================================================
+
+
+
+
+
+
+
+you can ignore the below
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+To differentiate two different region divisions in this study, nine climatically consistent regions within the contiguous United States would be referred to nine NOAA regions hereafter, which include Northwest (NW), Northern Rockies and Plains (NR), West (W), Southwest (SW), Upper Midwest (UM), South (S), Ohio Valley (OV), Southeast (SE), and Northeast (NE), while nine square regions, each covers one NOAA region, constituted by grid cells, on which Downscaler model is calculated, would be referred to as DS regions. Each NOAA region includes several spatially adjacent states and they do not intersect with each other, while on the other hand, pair of adjacent DS regions, in order to completely cover their corresponding NOAA regions, shares an area of intersection. Hence, for each AQS monitoring station which locates in the intersection of two DS regions, the grid cell it belongs to will simultaneously have two different mean DS estimates and standard error estimates. Finding a justifiable approach to combine mean/standard error from two regions is of main interest in this study.
+
+Based on the data that we have for the intersection of NW and NR, we consider "Y" as the number of grid cells in each region. "mu" is the mean prediction of the intersection between AQS and DS grids and also, "sd" in the standard deviation of the intersection between AQS and DS grids. Besides, we have "d" as a matrix of distance.
+As we have two zones of NW and NR, we want to optimize the maximum likelihood function of each zone regarding normal distribution. we specify a weighted average considering a "phi" to each normal distribution.
+At the end, based upon the MLE function, we can consider "phi" as a parameter to see that the overlap intersection part goes to which zone!
+
+Data strategy overview:
+1.    Find the grid cells that lie inside the overlap areas of the region (2- 4 overlaps per region)
+2.    Find downscaler prediction of mean and variance for each grid cell in the overlap.
+3.    For AQS stations inside the overlap, find the grid cell it’s located in.
+4.    For each AQS station inside the overlap combine the following info that will be used in the model: AQS reading, DS mean 1, DS mean 2, DS Standard Deviation 1, DS Standard Deviation 2, distance to the boundary of zone 1, distance to the boundary of zone 2.
+
+It was seen from the 9 overlapping NOAA sufaces from regional DS that the
+predictive models are not smoothly connected.
+ Especially in the north west  and west north central  regions, the predictive values on the boundary are so different that it leaves an issue of creating smooth surface.
+To tackle this issue, we use averaging model where the density fucntion of a point in the overlaping region  is a weighted
+average of density functions,  which are the original predictive 
+distributions of the point from regional DS.
+We set the weight proportional to the distance between the point and the boundary of the outer region(outer region refers to the ..), because the larger the distance is, the further the point is toward the inner area and less influenced by adjacent region.  
+We also introduce the parameter $\phi$ to adjust the effect of distance on wieghts. More specifically, we have the following weight for the density function from region $i$ with point $s$ :
+\[  w_{i}(s)=\exp(-\phi ds_i) \]  where $ds_i $ is the  distance of point s to outer boundary of region $i$.
+This implies that the larger the $\phi$ is, the bigger influence the distance has on the wieght. In extream case when $\phi$ is zero , the weight are simply evenly distrubuted among the densities, and if $\phi=\infty$  the density function simply becomes the closest density function and the weight has no effect on averaging. 
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+To differentiate two different region divisions in this study, nine climatically consistent regions within the contiguous United States will be referred to nine NOAA regions hereafter, which include Northwest (NW), Northern Rockies and Plains (NR), West (W), Southwest (SW), Upper Midwest (UM), South (S), Ohio Valley (OV), Southeast (SE), and Northeast (NE), while nine square regions, each covers one NOAA region, constituted by grid cells, on which Downscaler model is calculated, will be referred to as DS regions. Each NOAA region includes several spatially adjacent states and they do not intersect with each other, while on the other hand, pair of adjacent DS regions, in order to completely cover their corresponding NOAA regions, share an area of intersection. Hence, for each AQS monitoring station which locates in the intersection of two DS regions,the grid cells which it belongs to, will simultaneously have two different mean DS estimates and standard error estimates.  DS model is applied on regional scale (DS regions) producing 9 surfaces of estimate $PM_{2.5}$. It was seen that the DS estimated surfaces of $PM_{2.5}$  are not smoothly connected. Especially the DS estimates from the region NW and NR are so different on the boundary that it leaves an issue of creating smooth surface.
+
+To tackle this issue, we use the grid cells that lie inside the overlap areas of the region (2-4 overlaps per region). we use model averaging  where the probability density fucntion of a grid cell in the overlap   is a weighted average of density functions,  which are the predictive distributions of the grid cell from regional DS. We set the weight proportional to the distance of the grid cells to the boundary of the overlap, because the larger the distance is, the further the point is toward the inner area and less influenced by adjacent region.
+
+The parameter $\phi$ is also introduced to adjust the effect of distance on wieghts. More specifically, we have the following weight for the density function from region $i$ with point $s$ :
+$\[  w_{i}(s)=\exp(-\phi ds_i) \]$  where $ds_i $ is the  distance of point s to outer boundary of region $i$. This implies that the larger the $\phi$ is, the bigger influence the distance has on the wieght. In extream case when $\phi$ is zero , the weight are simply evenly distrubuted among the densities, and if $\phi=\infty$  the probability density function simply becomes the closest density function and the weight has no effect on averaging.
+
+Data strategy overview:
+1.    Find the grid cells that lie inside the overlap areas of the region (2- 4 overlaps per region)
+2.    Find downscaler prediction of mean and variance for each grid cell in the overlap.
+3.    For AQS stations inside the overlap, find the grid cell it’s located in.
+4.    For each AQS station inside the overlap combine the following info that will be used in the model: AQS reading, DS mean 1, DS mean 2, DS Standard Deviation 1, DS Standard Deviation 2, distance to the boundary of zone 1, distance to the boundary of zone 2.
+
+
+
+
+
+For AQS stations inside the overlap,we find the grid cell it’s located in and we calculate "d" as the "distance to the bounday of "zone 1" to the "zone n" based on our number of zones in the overlapping area of each region. Then, we will Find downscaler prediction of mean ("mu") and standard deviation ("sd") for each grid cell in the overlap.
+for instance, as we have two zones of NW and NR, we want to optimize the maximum likelihood function of each zone regarding normal distribution and then, to consider the probability density function regarding the average modeling of 2 (in general n) normal distribution of 2 zones in a region.
+At the end, based upon the MLE function, we can figure out "phi" as a parameter to see that the overlap intersection part goes to which zone!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
