@@ -4,22 +4,26 @@ library(readr)
 
 
 
-NW_AQS <- read_csv("~/Documents/IMSM/Working progress/NW_AQS.csv")
+
 
 ###########################
 # function: extracts data in the overlapping zone, find AQS sites #
 ###########################
-sites <- function(long_l, long_r, lat_d, lat_u, datavals){
-  datavals[which(datavals$Lon >= long_l & datavals$Lon <= long_r & datavals$Lat >= lat_d & datavals$Lat <= lat_u), ] 
+AQSsites <- function(long_l, long_r, lat_d, lat_u, datavals){
+  datavals[which(datavals$Lon > long_l & datavals$Lon < long_r & datavals$Lat > lat_d & datavals$Lat < lat_u), ] 
 }
 
-AQS_overlap_sites <- sites(-118, -109, 40, 51, NW_AQS)
+DSsites <- function(long_l, long_r, lat_d, lat_u, datavals){
+  datavals[which(datavals$Longitude > long_l & datavals$Longitude < long_r & datavals$Latitude > lat_d & datavals$Latitude < lat_u), ] 
+}
+
+#####AQS_overlap_sites <- sites(-118, -109, 40, 51, NW_AQS)
 
 
 ###########################
 # function: extracts data in the overlapping zone by quarter #
 ###########################
-quart <- function(datavals, quarter){
+AQSquart <- function(datavals, quarter){
   if (quarter == 1){
     q <- "2014-01-01"
   }else if (quarter ==2){
@@ -33,11 +37,26 @@ quart <- function(datavals, quarter){
   }
   datavals[datavals$Date == q, ]
 }
+
+DSquart <- function(datavals, quarter){
+  if (quarter == 1){
+    q <- "Jan-01-2014"
+  }else if (quarter ==2){
+    q <- "Jan-02-2014"
+  }else if (quarter ==3){
+    q <- "Jan-03-2014"
+  }else if (quarter ==4){
+    q <- "Jan-04-2014"
+  }else {
+    print("ERROR")
+  }
+  datavals[datavals$Date == q, ]
+}
 #breaks up AQS data for each quarter
-AQS_overlap_sites.Q1 <- quart(AQS_overlap_sites,1) #45
-AQS_overlap_sites.Q2 <- quart(AQS_overlap_sites,2) #37
-AQS_overlap_sites.Q3 <- quart(AQS_overlap_sites,3) #42
-AQS_overlap_sites.Q4 <- quart(AQS_overlap_sites,4) #33
+######AQS_overlap_sites.Q1 <- quart(AQS_overlap_sites,1) #45
+######AQS_overlap_sites.Q2 <- quart(AQS_overlap_sites,2) #37
+######AQS_overlap_sites.Q3 <- quart(AQS_overlap_sites,3) #42
+######AQS_overlap_sites.Q4 <- quart(AQS_overlap_sites,4) #33
 
 
 ###########################
@@ -95,7 +114,7 @@ grid <- function(AQS,DS_R1, DS_R2){
   
 }
 
-AQS_grid <- grid(AQS_overlap_sites.Q1, DS_overlap_sites_NW.Q1, DS_overlap_sites_NR.Q1)
+#####AQS_grid <- grid(AQS_overlap_sites.Q1, DS_overlap_sites_NW.Q1, DS_overlap_sites_NR.Q1)
   
 
 ###########################
@@ -153,13 +172,42 @@ distance <- function(latvslong, AQS, long_l, long_r, lat_d, lat_u, AQS_grid){
   
 }
 
-AQS_grid2 <- distance("long", AQS_overlap_sites.Q1, -118, -109, 40, 51, AQS_grid)
+#####AQS_grid2 <- distance("long", AQS_overlap_sites.Q1, -118, -109, 40, 51, AQS_grid)
   
 
 
+NW_AQS <- read_csv("~/Documents/IMSM/Working progress/NW_AQS.csv")
+NW_DS <- read_csv("~/Documents/IMSM/Working progress/NW_DS.csv")
+NR_DS <- read_csv("~/Documents/IMSM/Working progress/NR_DS.csv")
 
+organized_data <- function(long_l, long_r, lat_d, lat_u, AQS, DS_R1, DS_R2, latvslong){
+  #AQS = NW_AQS
+  AQS_overlap_sites <- AQSsites(long_l, long_r, lat_d, lat_u, AQS)
+  AQS_overlap_sites.Q1 <- AQSquart(AQS_overlap_sites,1) #45
+  AQS_overlap_sites.Q2 <- AQSquart(AQS_overlap_sites,2) #37
+  AQS_overlap_sites.Q3 <- AQSquart(AQS_overlap_sites,3) #42
+  AQS_overlap_sites.Q4 <- AQSquart(AQS_overlap_sites,4) #33
+  
+  #DS_R1 = NW_DS
+  DS_R1_overlap_sites <- DSsites(long_l, long_r, lat_d, lat_u, DS_R1)
+  DS_R1_overlap_sites.Q1 <- DSquart(DS_R1_overlap_sites,1) #45
+  DS_R1_overlap_sites.Q2 <- DSquart(DS_R1_overlap_sites,2) #37
+  DS_R1_overlap_sites.Q3 <- DSquart(DS_R1_overlap_sites,3) #42
+  DS_R1_overlap_sites.Q4 <- DSquart(DS_R1_overlap_sites,4) #33
+  
+  #DS_R2 = NR_DS
+  DS_R2_overlap_sites <- DSsites(long_l, long_r, lat_d, lat_u, DS_R2)
+  DS_R2_overlap_sites.Q1 <- DSquart(DS_R2_overlap_sites,1) #45
+  DS_R2_overlap_sites.Q2 <- DSquart(DS_R2_overlap_sites,2) #37
+  DS_R2_overlap_sites.Q3 <- DSquart(DS_R2_overlap_sites,3) #42
+  DS_R2_overlap_sites.Q4 <- DSquart(DS_R2_overlap_sites,4) #33
+  
+  AQS_grid <- grid(AQS_overlap_sites.Q1, DS_R1_overlap_sites.Q1, DS_R2_overlap_sites.Q1)
+  AQS_grid2 <- distance("long", AQS_overlap_sites.Q1, long_l, long_r, lat_d, lat_u, AQS_grid)
+  return(AQS_grid2)
+}
 
-
+organized_data(-118, -109, 40, 51, NW_AQS, NW_DS, NR_DS, "long")
 
 
 
