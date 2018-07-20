@@ -266,7 +266,7 @@ se_downscaler.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/Results/pm25_2014_SE
 s_downscaler.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/Results/pm25_2014_S/RESULTS"
 aqs.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/DSinput/ForAdam"
 
-
+#=== AQS DATA ===#
 setwd(aqs.dir)
 NW_AQS = read.csv("ds.input.aqs.pm25.2014.quarterly.NW.csv")
 
@@ -289,6 +289,7 @@ setwd(aqs.dir)
 UM_AQS = read.csv("ds.input.aqs.pm25.2014.quarterly.UM.csv")
 
 
+#=== DS DATA ===#
 setwd(nw_downscaler.dir)
 NW_DS = read.csv("Predictions.csv")
 
