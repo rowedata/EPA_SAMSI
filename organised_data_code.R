@@ -1,7 +1,7 @@
 
 start.time = Sys.time()
 
-###################################################################################################
+###############################################################################################
 
 #################
 ### FUNCTIONS ###
@@ -249,26 +249,37 @@ Likelihood_func  =  function(phi){
 }
 
 
-###################################################################################################
+###############################################################################################
 
+#############################
+#=== WORKING DIRECTORIES ===#
+#############################
 
-distance.dir = "C:/Users/dofori/Desktop/SAMSI/codes"
-nr_downscaler.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/Results/pm25_2014_NR/RESULTS"
-w_downscaler.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/Results/pm25_2014_W/RESULTS"
 nw_downscaler.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/Results/pm25_2014_NW/RESULTS"
+w_downscaler.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/Results/pm25_2014_W/RESULTS"
+nr_downscaler.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/Results/pm25_2014_NR/RESULTS"
 sw_downscaler.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/Results/pm25_2014_SW/RESULTS"
+um_downscaler.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/Results/pm25_2014_UM/RESULTS"
+s_downscaler.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/Results/pm25_2014_S/RESULTS"
+ov_downscaler.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/Results/pm25_2014_OV/RESULTS"
+ne_downscaler.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/Results/pm25_2014_NE/RESULTS"
+se_downscaler.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/Results/pm25_2014_SE/RESULTS"
+
+
 aqs.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/DSinput/ForAdam"
 Main.dir = "C:/Users/dofori/Desktop/SAMSI/Results_folder"
 
-um_downscaler.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/Results/pm25_2014_UM/RESULTS"
-ov_downscaler.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/Results/pm25_2014_OV/RESULTS"
-se_downscaler.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/Results/pm25_2014_SE/RESULTS"
-s_downscaler.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/Results/pm25_2014_S/RESULTS"
-aqs.dir = "C:/Users/dofori/Desktop/SAMSI/EPA/Data/DSinput/ForAdam"
+###############################################################################################
 
+##################
 #=== AQS DATA ===#
+##################
+
 setwd(aqs.dir)
 NW_AQS = read.csv("ds.input.aqs.pm25.2014.quarterly.NW.csv")
+
+setwd(aqs.dir)
+W_AQS = read.csv("ds.input.aqs.pm25.2014.quarterly.W.csv")
 
 setwd(aqs.dir)
 NR_AQS = read.csv("ds.input.aqs.pm25.2014.quarterly.NR.csv")
@@ -277,7 +288,7 @@ setwd(aqs.dir)
 SW_AQS = read.csv("ds.input.aqs.pm25.2014.quarterly.SW.csv")
 
 setwd(aqs.dir)
-SE_AQS = read.csv("ds.input.aqs.pm25.2014.quarterly.SE.csv")
+UM_AQS = read.csv("ds.input.aqs.pm25.2014.quarterly.UM.csv")
 
 setwd(aqs.dir)
 S_AQS = read.csv("ds.input.aqs.pm25.2014.quarterly.S.csv")
@@ -286,12 +297,22 @@ setwd(aqs.dir)
 OV_AQS = read.csv("ds.input.aqs.pm25.2014.quarterly.OV.csv")
 
 setwd(aqs.dir)
-UM_AQS = read.csv("ds.input.aqs.pm25.2014.quarterly.UM.csv")
+NE_AQS = read.csv("ds.input.aqs.pm25.2014.quarterly.NE.csv")
 
+setwd(aqs.dir)
+SE_AQS = read.csv("ds.input.aqs.pm25.2014.quarterly.SE.csv")
 
+###############################################################################################
+
+#################
 #=== DS DATA ===#
+#################
+
 setwd(nw_downscaler.dir)
 NW_DS = read.csv("Predictions.csv")
+
+setwd(w_downscaler.dir)
+W_DS = read.csv("Predictions.csv")
 
 setwd(nr_downscaler.dir)
 NR_DS = read.csv("Predictions.csv")
@@ -299,11 +320,8 @@ NR_DS = read.csv("Predictions.csv")
 setwd(sw_downscaler.dir)
 SW_DS = read.csv("Predictions.csv")
 
-setwd(w_downscaler.dir)
-W_DS = read.csv("Predictions.csv")
-
-setwd(se_downscaler.dir)
-SE_DS = read.csv("Predictions.csv")
+setwd(um_downscaler.dir)
+UM_DS = read.csv("Predictions.csv")
 
 setwd(s_downscaler.dir)
 S_DS = read.csv("Predictions.csv")
@@ -311,73 +329,53 @@ S_DS = read.csv("Predictions.csv")
 setwd(ov_downscaler.dir)
 OV_DS = read.csv("Predictions.csv")
 
-setwd(um_downscaler.dir)
-UM_DS = read.csv("Predictions.csv")
+setwd(ne_downscaler.dir)
+NE_DS = read.csv("Predictions.csv")
 
+setwd(se_downscaler.dir)
+SE_DS = read.csv("Predictions.csv")
 
+###############################################################################################
 
+####################################
+#==== DATASET EXTRACTION (SOME)====#
+####################################
+
+#== S_SE ==#
 latlong1 = c(-108, -86, 42, 24)
 latlong2 = c(-88, -73, 42, 23)
 
 organised.list = organized_data(latlong1, latlong2, S_AQS, S_DS, SE_DS, "long")
-#write.csv(organised.list, "S_n_SE.csv")
 
-
+#== NW_NR ==#
 latlong1 = c(-127, -109, 51, 40)
 latlong2 = c(-118, -93, 51, 38)
 
 organised.list2 = organized_data(latlong1, latlong2, NW_AQS, NW_DS, NR_DS, "long")
-#write.csv(organised.list2, "NW_n_NR.csv")
 
-
+#== OV_SE ==#
 latlong1 = c(-97, -76, 45, 33)
 latlong2 = c(-88, -73, 42, 23)
 
 organised.list3 = organized_data(latlong1, latlong2, OV_AQS, OV_DS, SE_DS, "long")
-#write.csv(organised.list3, "OV_n_SE.csv")
 
-
-
+#==SW_S ==#
 latlong1 = c(-116, -100, 44, 29)
 latlong2 = c(-108, -86, 42, 24)
 
 organised.list4 = organized_data(latlong1, latlong2, SW_AQS, SW_DS, S_DS, "long")
-#write.csv(organised.list4, "SW_n_S.csv")
-
 
 
 latlong1 = c(-99, -81, 51, 39)
 latlong2 = c(-97, -76, 45, 33)
 
 organised.list5 = organized_data(latlong1, latlong2, UM_AQS, UM_DS, OV_DS, "lat")
-#write.csv(organised.list5, "UM_n_OV.csv")
 
+##############################################################################################
 
-#
-latlong1 = c(-97, -76, 45, 33)
-latlong2 = c(-88, -73, 42, 23)
-
-organised.list6 = organized_data(latlong1, latlong2, OV_AQS, OV_DS, SE_DS, "long")
-#write.csv(organised.list6, "OV_n_SE.csv")
-
-
-latlong1 = c(-97, -76, 45, 33)
-latlong2 = c(-88, -73, 42, 23)
-
-organised.list7 = organized_data(latlong1, latlong2, OV_AQS, OV_DS, SE_DS, "long")
-#write.csv(organised.list7, "OV_n_SE.csv")
-
-
-latlong1 = c(-97, -76, 45, 33)
-latlong2 = c(-88, -73, 42, 23)
-
-organised.list8 = organized_data(latlong1, latlong2, OV_AQS, OV_DS, SE_DS, "long")
-#write.csv(organised.list8, "OV_n_SE.csv")
-
-#
-names(organised.list)
-names(organised.list2)
-
+################################
+#=== EXPORT RESULTS TO FILE ===#
+################################
 
 setwd(Main.dir)
 write.csv(organised.list, "S_n_SE.csv")
@@ -387,9 +385,11 @@ write.csv(organised.list4, "SW_n_S.csv")
 write.csv(organised.list5, "UM_n_OV.csv")
 
 
-###############################################################################
+#############################################################################################
 
+######################################################
 #=== Optimisation of phi value in Model averaging ===#
+######################################################
  
 t = 0
 
@@ -404,7 +404,7 @@ d   =  matrix(c(data1$d1  , data1$d2  ), ncol = 2)
 
 phi_optim[t] = (coef(mle(Likelihood_func, start = list(phi = 1))))[[1]]
 
-##################################################################################
+###############################################################################################
 
 data2 = organised.list2
 
@@ -416,7 +416,8 @@ d   =  matrix(c(data1$d1  , data1$d2  ), ncol = 2)
 
 phi_optim[t] = (coef(mle(Likelihood_func, start = list(phi = 1))))[[1]]
 
-#####################################################################################
+###############################################################################################
+
 data3 = organised.list3
 
 t = t + 1
@@ -427,8 +428,7 @@ d   =  matrix(c(data1$d1  , data1$d2)  , ncol = 2)
 
 phi_optim[t] = (coef(mle(Likelihood_func, start = list(phi = 1))))[[1]]
 
-######################################################################################
-
+###############################################################################################
 
 end.time = Sys.time()
 
