@@ -2,8 +2,8 @@
 source("R/functions.R")
 
 ##Reading AQS Grid Data
-AQS.grid <- read.csv("D:/Ohio State/SAMSI IMSM/EPA_SAMSI/data/AQS_DATA.csv")
-NW.NR <- read.csv("D:/Ohio State/SAMSI IMSM/EPA_SAMSI/data/combinedOfNW_NR.csv")
+AQS.grid <- read.csv("data/AQS_DATA.csv")
+NW.NR <- read.csv("data/combinedOfNW_NR.csv")
 
 NW.NR.AQS <- matrix(c(AQS.grid$yi, AQS.grid$yi), ncol = 2)
 NW.NR.AQS.mu <- matrix(c(NW.NR$m1, NW.NR$m2), ncol = 2)
@@ -15,7 +15,7 @@ phi.mle <- (coef(mle(likelihoodFunDensity, start = list(phi = 1), fixed = list(
   Y = NW.NR.AQS, dist = NW.NR.AQS.d, mu = NW.NR.AQS.mu, sd = NW.NR.AQS.sd))))[1]
 
 ##Read all DS estimates for region
-NW.NR.DS <- read.csv("D:/Ohio State/SAMSI IMSM/EPA_SAMSI/data/combinedOverlap.csv")
+NW.NR.DS <- read.csv("data/combinedOverlap.csv")
 
 ##Calculate distance from boundaries 
 DS.d.bound <- matrix(c(118 + NW.NR.DS$Longitude, -1*NW.NR.DS$Longitude - 109), ncol = 2)
