@@ -6,6 +6,7 @@ AQS.grid <- read.csv("data/AQS_DATA.csv")
 NW.NR <- read.csv("data/combinedOfNW_NR.csv")
 
 NW.NR.AQS <- matrix(c(AQS.grid$yi, AQS.grid$yi), ncol = 2)
+NW.NR.AQS2<-c(AQS.grid$yi)
 NW.NR.AQS.mu <- matrix(c(NW.NR$m1, NW.NR$m2), ncol = 2)
 NW.NR.AQS.sd <- matrix(c(NW.NR$s1, NW.NR$s2), ncol = 2)
 NW.NR.AQS.d <- matrix(c(NW.NR$d.to.R_1.edge, NW.NR$d.to.R_2.edge), ncol = 2)
@@ -17,11 +18,18 @@ phi.mle <- (coef(mle(likelihoodFunDensity, start = list(phi = 1), fixed = list(
 ##Read all DS estimates for region
 NW.NR.DS <- read.csv("data/combinedOverlap.csv")
 
+
 ##Calculate distance from boundaries 
 DS.d.bound <- matrix(c(118 + NW.NR.DS$Longitude, -1*NW.NR.DS$Longitude - 109), ncol = 2)
 
 ##Calculate distance from centre
 DS.d.cent <- abs(113.5 + NW.NR.DS$Longitude)
+
+##calculate distance from center for AQS
+match.site<-match(AQS.grid$Loc_Label1,NW.NR.DS$Loc_Label1 )
+
+NW.NR.AQS<-c()
+NW.NR.AQS.cent<-DS.d.cent[match.site]
 
 ##Read DS estimates and standard errors
 DS.y <- matrix(c(NW.NR.DS$Prediction, NW.NR.DS$Prediction.1), ncol = 2)
@@ -50,5 +58,5 @@ spliced.NW.NR.RV <- smoothEstimate(DS.d.bound, DS.y, phi.mle2)
 
 ##Get MLE for phi which linearly varies with distance from centre
 estimates.3 <- (coef(mle(likelihoodFunRV2, start = list(a1 = 1, a2 = 1), fixed = list(
-  Y = NW.NR.AQS, dist = NW.NR.AQS.d, mu = NW.NR.AQS.mu, sd = NW.NR.AQS.sd, dist.cen = DS.d.cent))))
+  Y = NW.NR.AQS2, dist = NW.NR.AQS.d, mu = NW.NR.AQS.mu, sd = NW.NR.AQS.sd, dist.cen = NW.NR.AQS.cent))))
 
