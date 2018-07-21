@@ -2,37 +2,48 @@
 source("R/functions.R")
 
 ##Reading AQS Grid Data
-AQS.grid <- read.csv("D:/Ohio State/SAMSI IMSM/EPA_SAMSI/data/AQS_DATA.csv")
-NW.NR <- read.csv("D:/Ohio State/SAMSI IMSM/EPA_SAMSI/data/combinedOfNW_NR.csv")
+AQS.grid <- read.csv("data/AQS_DATA.csv")
+NW.NR <- read.csv("data/combinedOfNW_NR.csv")
 
 NW.NR.AQS <- matrix(c(AQS.grid$yi, AQS.grid$yi), ncol = 2)
+NW.NR.AQS2<-c(AQS.grid$yi)
 NW.NR.AQS.mu <- matrix(c(NW.NR$m1, NW.NR$m2), ncol = 2)
 NW.NR.AQS.sd <- matrix(c(NW.NR$s1, NW.NR$s2), ncol = 2)
 NW.NR.AQS.d <- matrix(c(NW.NR$d.to.R_1.edge, NW.NR$d.to.R_2.edge), ncol = 2)
 
 ##Compute MLE
-phi.mle <- (coef(mle(likelihoodFunction, start = list(phi = 1), fixed = list(
+phi.mle <- (coef(mle(likelihoodFunDensity, start = list(phi = 1), fixed = list(
   Y = NW.NR.AQS, dist = NW.NR.AQS.d, mu = NW.NR.AQS.mu, sd = NW.NR.AQS.sd))))[1]
 
 ##Read all DS estimates for region
-NW.NR.DS <- read.csv("D:/Ohio State/SAMSI IMSM/EPA_SAMSI/data/combinedOverlap.csv")
+NW.NR.DS <- read.csv("data/combinedOverlap.csv")
 
-##Calculate distance from boundaries
-DS.d <- matrix(c(118 + NW.NR.DS$Longitude, -1*NW.NR.DS$Longitude - 109), ncol = 2)
+
+##Calculate distance from boundaries 
+DS.d.bound <- matrix(c(118 + NW.NR.DS$Longitude, -1*NW.NR.DS$Longitude - 109), ncol = 2)
+
+##Calculate distance from centre
+DS.d.cent <- abs(113.5 + NW.NR.DS$Longitude)
+
+##calculate distance from center for AQS
+match.site<-match(AQS.grid$Loc_Label1,NW.NR.DS$Loc_Label1 )
+
+NW.NR.AQS<-c()
+NW.NR.AQS.cent<-DS.d.cent[match.site]
 
 ##Read DS estimates and standard errors
 DS.y <- matrix(c(NW.NR.DS$Prediction, NW.NR.DS$Prediction.1), ncol = 2)
 DS.se <- matrix(c(NW.NR.DS$SEpred, NW.NR.DS$SEpred.1), ncol = 2)
 
 ##Get estimates based on MLE
-spliced.NW.NR.D <- smoothEstimate(DS.d, DS.y, phi.mle)
+spliced.NW.NR.D <- smoothEstimate(DS.d.bound, DS.y, phi.mle)
 
 ##Plot combined density function
 x <- seq(-50, 100, length = 1000)
 NW.pdf <- dnorm(x, mean = NW.NR.DS$Prediction[2], sd = NW.NR.DS$SEpred[2])
 NR.pdf <- dnorm(x, mean = NW.NR.DS$Prediction.1[2], sd = NW.NR.DS$SEpred.1[2])
-w.1 <- exp(-1*phi.mle*DS.d[2, 1])
-w.2 <- exp(-1*phi.mle*DS.d[2, 2])
+w.1 <- exp(-1*phi.mle*DS.d.bound[2, 1])
+w.2 <- exp(-1*phi.mle*DS.d.bound[2, 2])
 spliced.pdf <- (w.1/(w.1 + w.2))*NW.pdf + w.2/(w.1 + w.2)*NR.pdf
 par(mfrow = c(3, 1))
 plot(x, NW.pdf, type = "l", ylab = "NW")
@@ -43,4 +54,9 @@ plot(x, spliced.pdf, type = "l", ylab = "Spliced")
 phi.mle.2 <- (coef(mle(combineRVLL, start = list(phi = .4), fixed = list(
   Y = NW.NR.AQS2, dist = NW.NR.AQS.d, mu = NW.NR.AQS.mu, sd = NW.NR.AQS.sd))))[1]
 
-spliced.NW.NR.RV <- smoothEstimate(DS.d, DS.y, phi.mle2)
+spliced.NW.NR.RV <- smoothEstimate(DS.d.bound, DS.y, phi.mle2)
+
+##Get MLE for phi which linearly varies with distance from centre
+estimates.3 <- (coef(mle(likelihoodFunRV2, start = list(a1 = 1, a2 = 1), fixed = list(
+  Y = NW.NR.AQS2, dist = NW.NR.AQS.d, mu = NW.NR.AQS.mu, sd = NW.NR.AQS.sd, dist.cen = NW.NR.AQS.cent))))
+
