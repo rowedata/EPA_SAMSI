@@ -1,0 +1,172 @@
+\documentclass[10pt]{article}
+\usepackage[final]{graphicx}
+\usepackage{amsfonts}
+\usepackage[square, numbers, sort]{natbib}
+\bibliographystyle{abbrvnat}
+\newcounter{bibcount}
+\bibliographystyle{unsrt}
+
+\usepackage{url}
+
+\topmargin-.5in
+\textwidth6.6in
+\textheight9in
+\oddsidemargin0in
+
+\def\ds{\displaystyle}
+\def\d{\partial}
+
+\begin{document}
+
+\centerline{\large \bf Hybrid Splicing of Multi-Scale Downscaler Air Quality Surfaces}
+
+\vspace{.1truein}
+
+\def\thefootnote{\arabic{footnote}}
+\begin{center}
+  Elizabeth Herman\footnote{Department, University},
+  Jeonghwa Lee\footnote{Department, University},
+  Kartik Lovekar\footnote{Department, University},
+  Dorcas Ofori-Boateng\footnote{Department of Mathematical Sciences, University of Texas at Dallas},
+  Fatemeh Norouzi\footnote{Department, University},
+  
+  Benazir Rowe\footnote{Department of Mathematical Sciences, University of Nevada Las Vegas},
+  Jianhui Sun\footnote{Department, University}
+\end{center}
+
+%\vspace{.1truein}
+
+\begin{center}
+Problem presenters: Elisabeth Mannshardt\footnote{Environmental Protection Agency}, Barron Henderson\footnote{Environmental Protection Agency}, and Brett Gantt\footnote{Environmental Protection Agency}
+
+ 
+Faculty Mentor: Brian Reich\footnote{NCSU Statistics}
+\end{center}
+
+
+\vspace{.3truein}
+\centerline{\bf Abstract}
+
+\begin{itemize}
+\item Summarize the results presented in the report, and the contributions
+of your research.
+
+\item Readers should not have to look at the rest of the paper in order to 
+understand the abstract.
+
+\item Keep it short and to the point.
+\end{itemize}
+
+\section{Introduction}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In 2016, the US EPA estimated that approximately 123 million people lived in 
+counties where air quality concentrations were above the primary EPA's NAAQS \cite{EPAAir}. Additionally, the World Health Organization (in 2018) also reported an estimate of about 7 million premature deaths caused by ambient air pollution within the same timeline \cite{WhoAir}.
+Research has provided linkage between exposure to Particulate Matter (PM) to diverse health related problems \cite{schwartz1996air, braga2001lag, dominici2006fine}. Information on the concentration levels for pollutants comes from two sources, which include monitoring sites (AQS) and output from complex numerical models that produce concentration surfaces over large spatial regions.\\
+\vspace{-1em}
+\begin{flushleft}
+The EPA obtains the following data products from these information sources:
+\begin{itemize}
+	\vspace{-0.5em}
+	\item Air Quality System (AQS) measurements: Measurements of air pollutant concentrations from a monitoring network throughout the United States.
+	\vspace{-0.5em}
+	\item Community Multi-scale Air Quality (CMAQ) model: Simulations that combine current knowledge in atmospheric science and air quality modeling and multi-processor computing techniques to produce pollutant estimates.
+	\vspace{-0.5em}
+	\item Downscaler Model (DS): Model which fuses CMAQ output with air pollution readings using a spatially weighted model that regresses a monitoring data on a CMAQ derived regressor.
+	\vspace{-0.5em}
+	\item Inter-agency Monitoring of Protected Visual Environments (IMPROVE): Multi-agency monitor network to collect visibility related data.
+\end{itemize}
+
+\end{flushleft}
+\begin{flushleft}
+In recent decades, the attempt to fuse the two sources of information has allowed the EPA to provide downscaler Air Quality surfaces on a national spatial scale \cite{berrocal2010bivariate, berrocal2010spatio}. However, predictions on a regional scale produce an unsmoothed national surface.\\~
+\end{flushleft}
+
+\begin{figure}[!ht]
+	\centering
+	\vspace{-5em}
+	\includegraphics[width= 16cm, scale = 1, height = 10cm]{Image_1}
+	\caption{Name of Figure}
+	\label{fig:overlap}
+\end{figure}
+
+\begin{flushleft}
+With this study, we intend to build a methodological splicing framework/algorithm for regional estimates along regional boundaries to create smooth national surface.
+\end{flushleft}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{itemize}
+	\item Describe the problem you are trying to solve, the approach
+	you took, and summarize your contribution and results.
+	
+	\item Review the history of this problem, and existing literature.
+	
+	\item Give an outline of the rest of the paper.
+\end{itemize}
+
+\section{The Problem}
+\begin{itemize}
+	\item Give a precise technical description of your problem. 
+	
+	\item State and justify all your assumptions. 
+	
+	\item Define notation. 
+	
+	\item Describe your data, how you collected them, their properties,
+	and whether you did 
+	anything to them (removed noise, filled in missing data, 
+	applied normalizations).
+\end{itemize}
+\include{Data}
+
+\section{The Approach}
+\begin{itemize}
+	\item Present and justify your approach for solving the problem. 
+	\item Explain the advantages of your approach over existing ones.
+	
+	\item Tell a story.
+	Don't just say: ``I did this, then I did this, and at last I did this''.
+\end{itemize}
+
+\section{Computational Experiments}
+Give enough details so that readers can duplicate your experiments.
+
+\begin{itemize}
+	\item Describe the precise purpose of the experiments, and what they 
+	are supposed to show.
+	
+	\item Describe and justify your test data, and any assumptions you made to 
+	simplify the problem.
+	
+	\item Describe the software you used, and the 
+	parameter values you selected.
+	
+	\item 
+	For every figure, describe the meaning and units of the coordinate axes, 
+	and what is being plotted.
+	
+	\item Describe the conclusions you can draw from your experiments
+\end{itemize}
+
+\section{Summary and Future Work}
+\begin{itemize}
+	\item Briefly summarize your contributions, and their possible
+	impact on the field (but don't just repeat the abstract or introduction).
+	\item Identify the limitations of your approach.
+	\item Suggest improvements for future work.
+	\item Outline open problems.
+\end{itemize}
+
+
+
+\bibliography{mybib3} 
+%\bibliographystyle{plainnat}
+\bibliographystyle{ieeetr}
+
+
+
+
+
+\end{document}
