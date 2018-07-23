@@ -57,11 +57,11 @@ likelihoodFunRV2 <-function(a1, a2 ,dist.cen, Y, dist, mu, sd){
   #     boundaries of the overlap region. Nx2 matrix.
   #  mu: Downscaler estimates corresponding to AQS readings, Nx2 matrix.
   #  sd: Downscaler standard errors, Nx2 matrix.
-  #  dist.cen: distnace measured from boundary center to the point. nx1 vector
+  #  dist.cen: distnace measured from intersection center to the point. nx1 vector
   #
   #Returns:
   #  The log likelihood for phi
-  phi<-a1+a2*dist.cen
+  phi <- a1 + a2*dist.cen
   w <- exp(-phi*dist)
   w <- (1/apply(w, 1, sum))*w
   new.mu <- apply(w*mu, 1, sum)
@@ -118,7 +118,7 @@ smoothEstimate <- function(dist, mu, phi){
   return(estimate)
 }
 
-smoothEstimate2 <- function(a1,a2, dist.cen, dist, mu){
+smoothEstimate2 <- function(a1, a2, dist.cen, dist, mu){
   #Returns combined estimates for each grid value in the intersection
   #
   #Args:
@@ -129,7 +129,7 @@ smoothEstimate2 <- function(a1,a2, dist.cen, dist, mu){
   #
   #Returns:
   # Combined estimates for each grid point, Nx1 vector
-  phi<-a1+a2*dist.cen
+  phi <- a1 + a2*dist.cen
   w <- exp(-1*phi*dist)
   estimate <- (1/apply(w, 1, sum))*apply(w*mu, 1, sum)
   return(estimate)

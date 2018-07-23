@@ -7,11 +7,11 @@ library(geosphere)
 library(ggmap)
 library(data.table)
 
-data.dir <- "C:/Users/Benazir/Documents/EPA/Data"  
-cmaq.dir <- "C:/Users/Benazir/Documents/EPA/Data/DSinput/ForAdam"
-aqs.dir <- "C:/Users/Benazir/Documents/EPA/Data/DSinput/ForAdam"  
-ds.dir <- "C:/Users/Benazir/Documents/EPA/Data/Results/"
-export.lib <- "C:/Users/Benazir/Documents/EPA/PrelimResults/"
+data.dir <- "D:/Ohio State/SAMSI IMSM/EPA/Data"  
+cmaq.dir <- "D:/Ohio State/SAMSI IMSM/EPA/Data/DSinput/ForAdam"
+aqs.dir <- "D:/Ohio State/SAMSI IMSM/EPA/Data/DSinput/ForAdam"  
+ds.dir <- "D:/Ohio State/SAMSI IMSM/EPA/Data/Results"
+export.lib <- "D:/Ohio State/SAMSI IMSM/EPA_SAMSI/figs"
 res.pic <- 600
 
 Cb.folder <- "/cb_2017_us_nation_5m"
@@ -36,13 +36,15 @@ DATA <- read.csv(paste0(regional.dir,"National/", ds.output), header=TRUE) # NR 
 # LOAD REGIONAL DOWNSCLER PREDICTIONS 
 DATA.NR <- read.csv(paste0(regional.dir,"NR/", ds.output), header=TRUE) # NR only
 DATA.NW <- read.csv(paste0(regional.dir,"NW/", ds.output), header=TRUE) # NW only
+DATA.W <- read.csv(paste0(regional.dir,"W/", ds.output), header=TRUE) # W only
 
 DATA.NR <- data.frame(DATA.NR)
 DATA.NW <- data.frame(DATA.NW)
+DATA.W <- data.frame(DATA.W)
 
 DATA.NR.Q1 <-DATA.NR[DATA.NR$Date=="Jan-01-2014",] 
 DATA.NW.Q1 <-DATA.NW[DATA.NW$Date=="Jan-01-2014",] 
-
+DATA.W.Q1 <-DATA.W[DATA.W$Date=="Jan-01-2014",] 
 
 #Date Loc_Label1 Latitude Longitude Prediction SEpred
 DATA.Q1 <- DATA[DATA$Date=="Jan-01-2014",] #137241
@@ -67,22 +69,24 @@ class(us_cb.shp)
 # DATA.Q1usa <- DATA.Q1[DATA.Q1$InConus,]
 
 #############################################################################
-setwd("C:/Users/Benazir/Documents/")
+setwd("D:/Ohio State/SAMSI IMSM/EPA_SAMSI/data")
   
 # TRY TO REPLACE NR PREDICTIONS WITH OVERLAP NR
-head(DATA.NR.Q1)
-dim(DATA.NR.Q1)
+head(DATA.NW.Q1)
+dim(DATA.NW.Q1)
 
-predictions <- read.csv("Overlap.csv",, header=TRUE)
+predictions <- read.csv("Overlap.csv", header=TRUE)
 howManyPredictions <- dim(predictions)[1]
 
-for (i in 1: howManyPredictions) {
+for (i in 1:howManyPredictions){
   # find its location in DATA.Q1usa dataset
-  newPredictionLocation <- match(predictions$Loc_Label1[i],DATA.NR.Q1$Loc_Label1 )
+  newPredictionLocation <- match(predictions$Loc_Label1[i], DATA.NW.Q1$Loc_Label1)
   #replace the found location with new prediction
-  DATA.NR.Q1$Prediction [newPredictionLocation]= predictions$Weighted_Mean[i]
-  
+  DATA.NW.Q1$Prediction[newPredictionLocation] = spliced.NW.W[i]
 }
+
+NW.matched <- match(predictions$Loc_Label1, DATA.W.Q1$Loc_Label1)
+DATA.NW.Q1$Prediction[NW.matched] = spliced.NW.W
 
 ######################################################################################
 # REPLACE NR OVERLAP with overlap predictions
@@ -94,17 +98,16 @@ howManyPredictions <- dim(predictions)[1]
 for (i in 1: howManyPredictions) {
   predictions$Loc_Label1[i] # take first prediction's location
   # find its location in DATA.Q1usa dataset
-  newPredictionLocation <- match(predictions$Loc_Label1[i],DATA.NW.Q1$Loc_Label1 )
+  newPredictionLocation <- match(predictions$Loc_Label1[i],DATA.NR.Q1$Loc_Label1 )
   #replace the found location with new prediction
-  DATA.NW.Q1$Prediction [newPredictionLocation]= predictions$Weighted_Mean[i]
-
+  DATA.NR.Q1$Prediction[newPredictionLocation] = spliced.NW.NR.RV.4[i]
 }
 
 
-setwd(paste0(export.lib,"National/"))
+setwd(export.lib)
 
-MapDATA <- DATA.NW.Q1
-plotname <- "NationalPred.tiff"
+MapDATA <- DATA.NR.Q1
+plotname <- "NationalPredModel4new.tiff"
 plottitle <- "PM2.5 Seasonal Average: National Q1"
 colorlabel <- "PM2.5 Seasonal Ave"
 
