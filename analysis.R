@@ -146,3 +146,31 @@ spliced.NW.W <- smoothEstimate2(a1 = estimates.5[1], a2 = estimates.5[2],
                                 dist = NW.W.DS.d.bound, mu = NW.W.DS.mu)
 
 
+###################
+##Cross Validation
+
+set.seed(1234)
+
+test <- sample(45, 10)
+
+estimates.3.cv <- coef(mle(likelihoodFunRV2, start = list(a1 = 0.1, a2 = 0.2), 
+                        fixed = list(Y = NW.NR.AQS2[-test], 
+                                     dist = NW.NR.AQS.d[-test, ], 
+                                     mu = NW.NR.AQS.mu[-test, ], sd = NW.NR.AQS.sd[-test, ], 
+                                     dist.cen = NW.NR.AQS.cent[-test])))
+
+spliced.NW.NR.RV.new.cv <- smoothEstimate2(a1 = estimates.3[1], a2 = estimates.3[2],
+                                        dist.cen = DS.d.cent.lon,
+                                        dist = DS.d.bound, mu = DS.y)
+
+NW.NR.matched <- match(AQS.grid$Loc_Label1, NW.NR.DS$Loc_Label1)
+
+spliced.NW.NR.RV.new.cv <- (spliced.NW.NR.RV.new.cv[NW.NR.matched])[test]
+
+#MSE from spliced data on test set
+mean((NW.NR.AQS2[test] - spliced.NW.NR.RV.new.cv)^2)
+
+#MSE from spliced data an 45 DS sites
+spliced.NW.NR.RV.new.DS <- spliced.NW.NR.RV.new[NW.NR.matched]
+mean((AQS.grid$yi - spliced.NW.NR.RV.new.DS)^2)
+
