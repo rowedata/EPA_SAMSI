@@ -1,5 +1,5 @@
 
-setwd("D:/Ohio State/SAMSI IMSM/EPA_SAMSI")
+setwd("C:/Users/jeongwha/Desktop/EPA_SAMSI")
 
 library(stats4)
 
@@ -35,6 +35,7 @@ likelihoodFunRV <-function(phi, Y, dist, mu, sd){
   #Returns:
   #  The log likelihood for phi
   w <- exp(-phi*dist)
+  w<-(1/apply(w, 1, sum))*w
   new.mu <- apply(w*mu, 1, sum)
   new.s <- apply((w^2)*(sd^2), 1, sum)
   new.s <- (new.s)^{1/2}
@@ -59,8 +60,9 @@ likelihoodFunRV2 <-function(a1, a2 ,dist.cen, Y, dist, mu, sd){
   #  dist.cen: distnace measured from boundary center to the point. nx1 vector
   #Returns:
   #  The log likelihood for phi
-  phi <- a1 + a2*dist.cen
-  w <- exp(-phi*dist)
+    phi<-a1+a2*dist.cen
+   w <- exp(-phi*dist)
+   w<-(1/apply(w, 1, sum))*w
   new.mu <- apply(w*mu, 1, sum)
   new.s <- apply((w^2)*(sd^2), 1, sum)
   new.s <- (new.s)^{1/2}
