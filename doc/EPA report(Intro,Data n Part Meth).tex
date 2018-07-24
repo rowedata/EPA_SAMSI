@@ -21,6 +21,25 @@
 \def\ds{\displaystyle}
 \def\d{\partial}
 
+\usepackage{amsmath,amsfonts,amssymb,amsthm,epsfig,epstopdf,url,array}
+
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem*{cor}{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}[section]
+\newtheorem{conj}{Conjecture}[section]
+\newtheorem{exmp}{Example}[section]
+
+\theoremstyle{remark}
+\newtheorem*{rem}{Remark}
+\newtheorem*{note}{Note}
+
+
 \begin{document}
 
 \centerline{\large \bf Hybrid Splicing of Multi-Scale Downscaler Air Quality Surfaces}
@@ -53,16 +72,10 @@ Faculty Mentor: Brian Reich\footnote{NCSU Statistics}
 \vspace{.3truein}
 \centerline{\bf Abstract}
 
-\begin{itemize}
-\item Summarize the results presented in the report, and the contributions
-of your research.
-
-\item Readers should not have to look at the rest of the paper in order to 
-understand the abstract.
-
-\item Keep it short and to the point.
-\end{itemize}
-
+\justify
+The current EPA air pollution prediction model uses downscaler model uses the same parameter $\phi$ that is the same for all continental United States. However if we could run downscaler model on smaller regions, the parameter $\phi$ of the downscaler model could be localized and therefore we expect it to yield more precise predictions.Regional and national downscaler air quality predictions differ significantly for regions where AQS density is low. We present a method to splice regional downscaler air quality surfaces for regions with both low and high discrepancies.  The method provides visual smoothing of the 2 overlapping surfaces and can be extended to handle higher dimensional overlap.  We use the data from the downscaler models ran separately on 9 NOAA climatic regions of the continental US with some overlaps. Since tuning parameter is now different for each region there are significant discrepancies in the areas where the density of AQS stations is low. Such regions are Northwest, North Rockies, West and Southwest regions. 
+We focus on providing the smoothed estimates for the overlap areas based on predictions from 2 downscaler models. We base our smoothing parameter based on the latitudinal distance to the edge of both of the downscaler regions. In case if point lies close to the boundary of the region, the predictions from this region should be given less weight. 
+We provide an approach to generate smoothed estimates for overlap regions that blend in the discrepancies between 2 predictions based on the distance from the point to the boundary.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Introduction}
@@ -183,6 +196,127 @@ Armed with the above assumptions and deductions, we derive the following likelih
 \mathcal{L} (y_1,..,y_n; \phi) &= \prod_{j=1}^{n} f(y_j) = \prod_{j=1}^{n}  w_{1}(s)f_{1,s}(y_j) + w_{2}(s)f_{2,s}(y_j)              \\
 &         = \prod_{j=1}^{n} e^{-\phi d(s_j,1)}f_{1,s_j}(y_j) +  e^{-\phi d(s_j,2)}f_{2,s_j}(y_j)
 \end{align*}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Using maximum likelihood method, $\hat{\phi}$ is obtained, and the new predicted mean at the site $s$ in the overlap becomes weighted means :
+\begin{align}
+\hat{\mu(s)} &=\int y \hat{f(y)} dy= \int \hat{w_{1}(s)}f_{1,s}(y)+\hat{w_{2}(s)}f_{2,s}(y) \\ & = 
+\int   y \exp(-\hat{\phi} d(s,1))f_{1,s}(y)+y \exp(-\hat{\phi} d(s,2))f_{2,s}(y) dy \\ &=   \exp(-\hat{\phi} d(s,1))\hat{\mu_{1}(s)}+ \exp(-\hat{\phi} d(s,2)) \hat{\mu_{2}(s)} \\
+&=\hat{w_{1}(s)}\hat{\mu_{1}(s)}+ \hat{w_{2}(s)}\hat{\mu_{2}(s)} \end{align}   where $\hat{w_{i}(s)}=\exp(-\hat{\phi} d(s,i)), i=1,2.$\\
+\par (M2) Method 2:
+\\ Instead of mixing density functions, here we mix two random variables. Assume that we have two independent normal variables at site $s$ in the overlap, each from DS region $i, i=1,2.$ In other words, for a site $s$  the information from DS region $i$  is assumed to be represented by $X_{i}(s) \sim N( {\hat \mu_{i}(s)}, {\hat \sigma_{i}(s)}   ),    i=1,2.$
+Our new combined information at site $s$ is then expressed as follows:
+\[ X= w_{1}(s)X_{1}(s)+w_{2}(s)X_{2}(s)\] where the weight $w_{i}(s)$ is defined as before,
+$w_{i}(s)=\exp(-\phi d(s,i)).$
+With the assumption that $X_{1}(s)$ and $X_{2}(s)$ are independent normal variables, X becomes normal variable 
+with mean $ \mu_{\phi}=  w_{1}(s){\hat\mu_{1}(s)}+w_{2}(s){\hat\mu_{2}(s)}$ and variance $ {\sigma_{\phi}}^2={w_{1}(s)}^2{\hat\sigma_{1}(s)}^2+{w_{2}(s)}^2{\hat \sigma_{2}(s)}^2$. 
+Therefore the following likelihood function is as follows:
+\[  \mathcal{L} (y_1,...,y_n;\phi)= \prod_{j=1}^{n}f(y_j;\phi)  \] where $f(y;\phi)$ is normal density function with mean $\mu_{\phi}$ and variance
+${\sigma_{\phi}}^2.$
+
+Using maximum likelihood method, MLE of $\phi$, $\hat{\phi}$, is obtained yielding new predicted mean at the site $s$ in the overlap as
+${\hat\mu(s)} ={\hat w_{1}(s)}{\hat \mu_{1}(s)}+ {\hat w_{2}(s)}{\hat \mu_{2}(s)},   $ where ${\hat w_{i}(s)}=\exp(-\hat{\phi} d(s,i)).$\\
+\par (M3) Method 3:\\ 
+Here the whole procedure is the same as M2 except that the parameter $\phi$ is  now  a linear function of horizontal distance of site $s$ in the overlap to the
+vertical center line in the overlap area.
+
+(pic of distance to explain it)
+
+The reason we set the parameter as a function of this distance is because  the degree of influence of distance on weight could be different when the site is in the middle than it lies close to outer lines.
+More specifically, we have the following function for $ \phi$: 
+\[ \phi(d(s,c))= b_0+b_1 d(s,c)   \] where $d(s,c)$ is the horizontal distance of $s$ to the  vertical center line, i.e.,  $d(s,c)=|s_{lon}-c_{lon}|$ where
+$s_{lon}, c_{lon}$ are longitude of point $s$ and center line $c$ respectively.
+
+(possibly pic??for this)
+
+By using this function for $\phi$, we can make the surface smoother in the middle while the edge of the overlap remain closer to the inner area than we use constant $\phi$ as in M2.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{smooth surfaces from three methods}
+Since the regional DS shows that the most disconnected region is the area between NW and NR, we restric ourselves to these regions, 
+applying the three methods in the previous section on the overlap of NW and NR.
+The following is the results from each method:
+
+
+\begin{table}[!ht]
+	\centering
+	\caption{MLE}
+	\label{table:name of table for referncing}
+	\begin{tabular}{ l l l l l l l} 
+		\toprule
+		& &  \multicolumn{5}{c}{Method (M)} \\ \cmidrule(l){3-7} 
+		Parameter & &  M1      & &  M2       & &   M3 \\
+		\toprule
+		$\phi$    & &   1.450  & &  0.222    & &   -    \\
+		$b_{0}$   & &   -      & &  -        & &   0.157 \\
+		$b_{1}$   & &   -      & &  -        & &   0.029 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+
+The above table shows MLE of parameter in each method.
+For M1 and M2, we have one parameter $\phi$ and for M3 we have $b_0 ,$ $b_1$ in weight function. The MLE of $\phi$ is 1.450, 0.222 for M1 and M2 respectively meaning that M2 smooth the data in the overlap more than M1 since it has larger $\hat{\phi}$. For M3, $\hat{b_0}=0.157  ,\hat{b_1}=0.029.$
+
+
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width = 18cm, scale = 1, height = 10cm]{All_Methods}
+	\vspace{-5em}
+	\caption{ (a) M1 applied on the intersection of NR and NW (b) M2 applied on the intersection of NR and NW  (c) M3 applied on the intersection of NR and NW 
+		\vspace{-1em}
+		\label{fig: Applying M1, M2, M3 on the intersection of NR and NW}}
+\end{figure}
+
+
+\justify
+It is clear from the picture 1 and picture 2 that M2 shows smoother surface than M1 as we can see the sharp red edge in the middle in picture 1.
+This result looks puzzling in the first place, makes one wondering why M2 makes smoother surface. This can be explained  when pdfs are drawn for the two methods.
+(graph of pdfs from two methods )
+\justify
+The black and red graph above are drawn with two normal densities, $N(0,1), N(3,1)$ with weight $.3, .7 $ from M1 and M2 respectively. The blue graph is drawn with the same densities but with weights $.1,.9$ respectively with M1. 
+The means of the black and red density are the same, $.21.$
+Density function from M2 is normal density, symmetric, and has a peak at the mean. 
+Density function from M1 is skewed to the left which has smaller weight, and has peak at 3.  The peak in M1 is 3 when the second weight is larger than .5, highest when the weight is .5, and  getting lowered making more skewed distribution as 
+the weight is decreased. This can be seen by comparing the blue and black graph. 
+It is that property that makes MLE of $\phi$ in M1 larger than that of M2, making the values in the overlap stay closer to the mean from closer area,
+thus produce less smooth surface.
+\justify
+Comparing the picture 2 and 3, it is seen that the method 3 is better at smoothing near the outer boundary of NW region,
+since we see the disconnection on the outer boundary  of NW on picture 2 and it is blurred in picture 3. This result is 
+expected as we make $\phi$ as a linear function of distance from the center line. 
+
+
+\begin{rem}
+	There are many other ways to splice two regions making smooth surface. If one uses different form of $\phi$, and/or different distance
+	measure, different smooth surface might be obtained. In this study we only use either longitude of sites or latitude of sites  for splicing two region to measure the distance but one can also use both latitude and longitude achieving smoothness in both direction-horizontally and vertically.
+	Also  $\phi$ can be  quadratic form of distance making more dynamic smooth surface.
+	Here we want to mention that there could be a case where different smooth surfaces produced by different methods are all very smooth and at the same time they all fit the data well. Then splicing surfaces could be subjective matter in that case , and it is because of the lack of data in particular region. 
+	Nontheless our method is not too complicated and useful tool when two different information on the same region needs to be combined.
+	
+\end{rem}
+
+\subsection{comparing methods using cross validation}
+
+
+
+\subsection{comparing methods using MSE}
+
+\justify
+MSE(mean square error)
+In our data, it turned out that the M fits the data best as it has the smallest MSE. 
+PMSE(predicted mean squared error)
+M has the smallest PMSE among three models in our case. We make comment that it doesn't mean that Mis always fits the data best nor
+Mis superior than the other methods. 
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
