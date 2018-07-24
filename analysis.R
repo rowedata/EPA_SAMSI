@@ -92,6 +92,8 @@ spliced.NW.NR.RV.new <- smoothEstimate2(a1 = estimates.3[1], a2 = estimates.3[2]
                                         dist.cen = DS.d.cent.lon,
                                         dist = DS.d.bound, mu = DS.y)
 
+NW.NR.DS$spliced <- spliced.NW.NR.RV.new
+
 estimates.4 <- coef(mle(likelihoodFunRV3, start = list(beta.0 = 0, beta.1 = 0,
                                                        alpha.0 = 0, alpha.1 = 0),
                         fixed = list(d.1.centre = NW.NR.AQS.cent[, 1], 
@@ -145,9 +147,53 @@ spliced.NW.W <- smoothEstimate2(a1 = estimates.5[1], a2 = estimates.5[2],
                                 dist.cen = NW.W.DS.d.cent, 
                                 dist = NW.W.DS.d.bound, mu = NW.W.DS.mu)
 
+###################################
+##North Rockies and West
+
+NR.W.AQS <- read.csv("data/W_NR.csv")
+NR.W.DS <- read.csv("data/DSOverlap_NR_W.csv")
+
+#Replace NR estimates with previous run
+NW.NR.DS$spliced <- spliced.NW.NR.RV.new
+NR.matched <- match(NW.NR.DS$Loc_Label1, NR.W.DS$Loc_Label1)
+NR.matched <- NR.matched[!is.na(NR.matched)]
+NR.W.DS[NR.matched, 5] <- NW.NR.DS$spliced
+
+for (i in 1:dim(NW.NR.DS)[1]){
+  newPredictionLocation <- match(NW.NR.DS$Loc_Label1[i], NR.W.DS$Loc_Label1)
+  NR.W.DS$m1[newPredictionLocation] = NW.NR.DS$spliced[i]
+}
+
+#Get DS estimates and standard errors
+NR.W.AQS.mu <- NR.W.AQS[, c(8, 6)]
+NR.W.AQS.sd <- NR.W.AQS[, c(9, 7)]
+
+#Get distance from centre of intersection (lat = 41)
+NR.W.AQS.d.cent <- abs(NR.W.AQS$Latitude - 41)
+NR.W.DS.d.cent <- abs(NR.W.DS$Latitude - 41)
+
+#Get all DS estimates 
+NR.W.DS.mu <- NR.W.DS[, c(5, 7)]
+
+#Get distances from boundaries of intersection (-118, -93, 44, 38)
+NR.W.AQS.d.bound <- matrix(c(abs(38 - NR.W.AQS$Latitude), 
+                             abs(44 - NR.W.AQS$Latitude)), ncol = 2)
+
+NR.W.DS.d.bound <- matrix(c(abs(38 - NR.W.DS$Latitude), 
+                            abs(44 - NR.W.DS$Latitude)), ncol = 2)
+
+estimates.6 <- coef(mle(likelihoodFunRV2, start = list(a1 = 0, a2 = 0),
+                        fixed = list(dist.cen = NR.W.AQS.d.cent, Y = NR.W.AQS$yi, 
+                                     dist = NR.W.AQS.d.bound, mu = NR.W.AQS.mu, 
+                                     sd = NR.W.AQS.sd)))
+
+spliced.NR.W <- smoothEstimate2(a1 = estimates.6[1], a2 = estimates.6[2], 
+                                dist.cen = NR.W.DS.d.cent, 
+                                dist = NR.W.DS.d.bound, mu = NR.W.DS.mu)
+
 
 ###################
-##Validation
+##Validation NW, NR
 
 set.seed(1234)
 
@@ -182,3 +228,26 @@ mean((NW.NR.AQS2 - NW.NR.AQS.mu[, 1])^2)
 
 #MSE using NR DS estimates
 mean((NW.NR.AQS2 - NW.NR.AQS.mu[, 2])^2)
+
+#Read National Estimates, keep predictions for AQS sites
+national.DS <- read.csv("data/Results/pm25_2014_National/RESULTS/Predictions.csv")
+national.DS <- national.DS[match(AQS.grid$Loc_Label1, national.DS$Loc_Label1), ]
+
+#MSE for national vs AQS sites
+mean((AQS.grid$yi - national.DS$Prediction)^2)
+
+#Read IMPROVE readings, keep readings in the intersection
+NW.NR.improve <- read.csv("data/NW_NR_improve.csv")
+spliced.improve <- merge(NW.NR.improve, NW.NR.DS, by.x = "DS_Lat", by.y = "Latitude")
+
+#MSE for spliced vs IMPROVE
+mean((spliced.improve$spliced - spliced.improve$PM25_value)^2)
+
+#MSE for DS NW vs IMPROVE
+mean((spliced.improve$Prediction - spliced.improve$PM25_value)^2)
+
+#MSE for DS NR vs IMPROVE
+mean((spliced.improve$Prediction.1 - spliced.improve$PM25_value)^2)
+
+
+
