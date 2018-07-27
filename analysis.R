@@ -57,6 +57,9 @@ match.site <- match(AQS.grid$Loc_Label1, NW.NR.DS$Loc_Label1)
 
 NW.NR.AQS.cent <- DS.d.cent.lon[match.site]
 
+AQS.d.cent.lon <- DS.d.cent.lon[match.site]
+AQS.d.cent.lat <- DS.d.cent.lat[match.site]
+
 ##Read DS estimates and standard errors
 DS.y <- matrix(c(NW.NR.DS$Prediction, NW.NR.DS$Prediction.1), ncol = 2)
 DS.se <- matrix(c(NW.NR.DS$SEpred, NW.NR.DS$SEpred.1), ncol = 2)
@@ -96,8 +99,8 @@ NW.NR.DS$spliced <- spliced.NW.NR.RV.new
 
 estimates.4 <- coef(mle(likelihoodFunRV3, start = list(beta.0 = 0, beta.1 = 0,
                                                        alpha.0 = 0, alpha.1 = 0),
-                        fixed = list(d.1.centre = NW.NR.AQS.cent[, 1], 
-                                     d.2.centre = NW.NR.AQS.cent[, 2], 
+                        fixed = list(d.1.centre = AQS.d.cent.lat, 
+                                     d.2.centre = AQS.d.cent.lon, 
                                      d.1 = NW.NR.lat.centre.dist,
                                      d.2 = NW.NR.lon.centre.dist,
                                      mu = NW.NR.AQS.mu, sd = NW.NR.AQS.sd,
@@ -248,6 +251,25 @@ mean((spliced.improve$Prediction - spliced.improve$PM25_value)^2)
 
 #MSE for DS NR vs IMPROVE
 mean((spliced.improve$Prediction.1 - spliced.improve$PM25_value)^2)
+
+
+###############################
+##Standard Errors Model 3
+
+NW.NR.spliced.se <- standardErrorsModel3(sd = NW.NR.DS[, c(6, 8)], 
+                                         beta.0 = estimates.3[1], 
+                                         beta.1 = estimates.3[2],
+                                         dist.cen = DS.d.cent.lon,
+                                         dist = DS.d.bound)
+
+se.hist.1 <- hist(NW.NR.DS$SEpred)
+se.hist.2 <- hist(NW.NR.DS$SEpred.1)
+se.hist.spliced <- hist(NW.NR.spliced.se)
+
+plot(se.hist.1, col = rgb(0, 0, 1))
+#plot(se.hist.2, col = rgb(0, 1, 0, 1/3), add = TRUE)
+plot(se.hist.spliced, col = rgb(1, 0, 0), add = TRUE, 
+     xlab = "Standard Errors", plottitle = "Frequency of standard errors")
 
 
 

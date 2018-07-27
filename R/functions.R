@@ -122,10 +122,13 @@ smoothEstimate2 <- function(a1, a2, dist.cen, dist, mu){
   #Returns combined estimates for each grid value in the intersection
   #
   #Args:
+  #  a1: Intercept for phi
+  #  a2: Slope for phi vs. distance from centre of intersection
   #  dist: Distance, measured in degrees of longitude, from each grid point to
   #     boundaries of the overlap region. Nx2 matrix.
   #  mu: All Downscaler estimates, Nx2 matrix.
   #  phi: MLE of parameter phi
+  #  dist.cen: Distance from centre of intersection to DS estimate
   #
   #Returns:
   # Combined estimates for each grid point, Nx1 vector
@@ -159,4 +162,22 @@ smoothEstimate3 <- function(beta.0, beta.1 , alpha.0, alpha.1, d.1.centre,
   estimate <- (1/apply(w, 1, sum))*apply(w*mu, 1, sum)
 }
 
-
+standardErrorsModel3 <- function(sd, beta.0, beta.1, dist.cen, dist){
+  #Returns standard errors for estimates from model 3
+  #
+  #Args:
+  #  a1: Intercept for phi
+  #  a2: Slope for phi vs. distance from centre of intersection
+  #  dist: Distance, measured in degrees of longitude, from each grid point to
+  #     boundaries of the overlap region. Nx2 matrix.
+  #  mu: All Downscaler estimates, Nx2 matrix.
+  #  phi: MLE of parameter phi
+  #  dist.cen: Distance from centre of intersection to DS estimate
+  #
+  #Returns:
+  # Combined estimates for each grid point, Nx1 vector
+  phi <- beta.0 + beta.1*dist.cen
+  w <- exp(-phi*dist)
+  se <- sqrt((1/apply((w^2), 1, sum))*apply((w^2)*(sd^2), 1, sum))
+  return(se)
+}
